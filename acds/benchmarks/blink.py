@@ -36,28 +36,30 @@ def get_blink_data(
     arr_data = np.array(x)
     arr_data = arr_data.transpose(0, 2, 1)
     arr_targets = np.array(y)  
-
-    indices = np.arange(len(arr_data))
-    np.random.shuffle(indices)  
-    arr_data = arr_data[indices]
-    arr_targets = arr_targets[indices] 
-
     arr_data = torch.tensor(arr_data, dtype=torch.float32)
+
+    train_series = arr_data[:500]
+    train_targets = arr_targets[:500]
+
+    test_series = arr_data[500:]
+    test_targets = arr_targets[500:]
 
     if whole_train:
         valid_len = 0
     else:
         valid_len = 150     # 30% for validation
+        train_idx = 500 - valid_len
 
-    train_idx = 500 - valid_len
+        indices = np.arange(len(train_series))
+        np.random.shuffle(indices)  
+        train_series = train_series[indices]
+        train_targets = train_targets[indices]
 
-    train_series = arr_data[:train_idx]
-    valid_series = arr_data[train_idx:500]
-    test_series = arr_data[500:]
+        valid_series = train_series[train_idx:500]
+        train_series = train_series[:train_idx]
 
-    train_targets = arr_targets[:train_idx]
-    valid_targets = arr_targets[train_idx:500]
-    test_targets = arr_targets[500:]
+        valid_targets = train_targets[train_idx:500] 
+        train_targets = train_targets[:train_idx]
 
     train_data, eval_data, test_data = inp_out_pairs(train_series, train_targets), inp_out_pairs(valid_series, valid_targets), inp_out_pairs(test_series, test_targets)
     train_loader = DataLoader(
