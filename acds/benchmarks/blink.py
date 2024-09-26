@@ -3,6 +3,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 from aeon.datasets import load_classification
+from sklearn.model_selection import train_test_split
 
 def get_blink_data(
     bs_train: int, 
@@ -44,23 +45,18 @@ def get_blink_data(
     test_series = arr_data[500:]
     test_targets = arr_targets[500:]
 
+    valid_series = []
+    valid_targets = []
     if whole_train:
-        valid_len = 0
-    else:
-        valid_len = 150     # 30% for validation
-        train_idx = 500 - valid_len
+        indices = np.arange(len(test_series))
+        np.random.seed(20) 
+        np.random.shuffle(indices)
+        test_series = test_series[indices]
+        test_targets = test_targets[indices]
+    else:        
+        train_series, valid_series, train_targets, valid_targets = train_test_split(train_series, train_targets, test_size=0.3, random_state=20, stratify=train_targets)
 
-        indices = np.arange(len(train_series))
-        np.random.shuffle(indices)  
-        train_series = train_series[indices]
-        train_targets = train_targets[indices]
-
-        valid_series = train_series[train_idx:500]
-        train_series = train_series[:train_idx]
-
-        valid_targets = train_targets[train_idx:500] 
-        train_targets = train_targets[:train_idx]
-
+    
     train_data, eval_data, test_data = inp_out_pairs(train_series, train_targets), inp_out_pairs(valid_series, valid_targets), inp_out_pairs(test_series, test_targets)
     train_loader = DataLoader(
         train_data, batch_size=bs_train, shuffle=True, drop_last=False
