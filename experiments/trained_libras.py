@@ -14,7 +14,7 @@ parser = argparse.ArgumentParser(description="training parameters")
 parser.add_argument("--resultroot", type=str)
 parser.add_argument("--resultsuffix", type=str, default="", help="suffix to append to the result file name")
 parser.add_argument(
-    "--n_hid", type=int, default=256, help="hidden size of recurrent net"
+    "--n_hid", type=int, default=112, help="hidden size of recurrent net"
 )
 parser.add_argument('--modelname', type=str, default="trainedpron", choices=["trainedpron", "hcornn"],
                     help="Model name to use")

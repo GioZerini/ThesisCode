@@ -14,7 +14,7 @@ parser = argparse.ArgumentParser(description="training parameters")
 parser.add_argument("--resultroot", type=str)
 parser.add_argument("--resultsuffix", type=str, default="", help="suffix to append to the result file name")
 parser.add_argument(
-    "--n_hid", type=int, default=256, help="hidden size of recurrent net"
+    "--n_hid", type=int, default=25, help="hidden size of recurrent net"
 )
 parser.add_argument('--modelname', type=str, default="trainedpron", choices=["trainedpron", "hcornn"],
                     help="Model name to use")
@@ -25,17 +25,17 @@ parser.add_argument(
     "--dt", type=float, default=0.01, help="step size <dt> of the coRNN"
 )
 parser.add_argument(
-    "--gamma", type=float, default=3
+    "--gamma", type=float, default=0.5
 )
 parser.add_argument(
     "--epsilon",
     type=float,
-    default=5,
+    default=1,
 )
 parser.add_argument(
     "--gamma_range",
     type=float,
-    default=2,
+    default=0.5,
 )
 parser.add_argument(
     "--epsilon_range",
